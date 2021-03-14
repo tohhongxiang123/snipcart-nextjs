@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export interface IProduct {
     id: string
@@ -16,7 +17,7 @@ interface IProductProps {
 const Product = (props: IProductProps) => {
     return (
         <div className="product">
-            <h2 className="product__title">{props.product.name}</h2>
+            <h2 className="product__title"><Link href={`/products/${props.product.id}`}>{props.product.name}</Link></h2>
             <p className="product__description">{props.product.description}</p>
             <Image src={props.product.image} alt="" className="product__image" width="300" height="auto" />
             <div className="product__price-button-container">
@@ -25,10 +26,10 @@ const Product = (props: IProductProps) => {
                     data-item-id={props.product.id}
                     data-item-name={props.product.name}
                     data-item-price={props.product.price}
-                    data-item-url={props.product.url} // should be the current url 
+                    data-item-url={`/products/${props.product.id}`} // should be the current url 
                     data-item-image={props.product.image}>
                     Add to cart (${props.product.price.toFixed(2)})
-          </button>
+                </button>
             </div>
         </div>
     )
