@@ -1,31 +1,20 @@
-import { IProduct } from '../components/ProductPreview'
+import fs from 'fs';
+
+export interface IProduct {
+    id: string
+    name: string
+    price: number
+    description: string
+    image?: string,
+    category: string
+}
+
+const rawData = fs.readFileSync('./utils/products.json')
+const { products }: { products: IProduct[] } = JSON.parse(rawData as any)
 
 async function sleep(milliseconds: number) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
-
-const products: IProduct[] = [{
-    id: '1',
-    name: 'TestProduct',
-    price: 25,
-    url: 'test',
-    description: 'test description',
-    image: '/gourami.jpg',
-}, {
-    id: '2',
-    name: 'TestProduct2',
-    price: 250,
-    url: 'test',
-    description: 'test description 2',
-    image: '/guppy.jpg',
-}, {
-    id: '3',
-    name: 'TestProduct3',
-    price: 2500,
-    url: 'test',
-    description: 'test description 3',
-    image: '/betta.webp',
-}]
 
 async function getAllProducts() {
     await sleep(1000)
@@ -34,9 +23,23 @@ async function getAllProducts() {
 
 async function getProduct(id: IProduct['id']) {
     await sleep(1000)
-    return products.find(product => id === product.id)
+    return products.find(product => id.toString() === product.id.toString())
+}
+
+async function getProductsByCategories() {
+    await sleep(1000)
+    const productCategoryDict = {}
+    for (const product of products) {
+        if (product.category in productCategoryDict) {
+            productCategoryDict[product.category].push(product)
+        } else {
+            productCategoryDict[product.category] = [product]
+        }
+    }
+    
+    return productCategoryDict
 }
 
 export {
-    getProduct, getAllProducts
+    getProduct, getAllProducts, getProductsByCategories
 }
