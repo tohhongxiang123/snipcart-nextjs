@@ -28,7 +28,7 @@ export default function Index({ bestSellers = [], productCategories = {} }: Inde
                 <section className="p-4">
                     <h2 className="text-center text-4xl tracking-tight font-extrabold text-gray-900 mb-2 mx-auto">Best Sellers</h2>
                     <div className="grid grid-flow-rowgap-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center justify-start">
-                        {bestSellers.slice(0, MAX_PRODUCTS).map(product => <div className="mx-auto my-4"><ProductPreview product={product} key={product.id} /></div>)}
+                        {bestSellers.slice(0, MAX_PRODUCTS).map(product => <div className="mx-auto my-4" key={product.id}><ProductPreview product={product} key={product.id} /></div>)}
                     </div>
                 </section>
                 <hr />
@@ -43,12 +43,6 @@ export default function Index({ bestSellers = [], productCategories = {} }: Inde
                         ))}
                     </div>
                 </section>
-                <section className="block">
-                    <h2>Contact Us</h2>
-                    <p>Number: +65 123 456</p>
-                    <p>Email: Some email</p>
-                </section>
-                <button className="snipcart-checkout">Show cart</button>
             </div>
         </Layout>
     )
