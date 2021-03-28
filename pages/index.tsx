@@ -20,9 +20,9 @@ export default function Index({ bestSellers = [], productCategories = {} }: Inde
                 <section className="text-center px-8 py-16 flex flex-col items-center">
                     <h1 className="text-5xl tracking-tight font-extrabold text-gray-900 mb-4">Lorem Ipsum</h1>
                     <p className="text-gray-500 text-xl max-w-lg">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras porttitor elit sed laoreet cursus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
-                    <div className="m-8 flex justify-around max-w-md space-x-4">
-                        <Link href="/products"><Button color="primary" className="px-10 py-4">Products</Button></Link>
-                        <Link href="/contact"><Button color="outlined" className="px-10 py-4">Contact Us</Button></Link>
+                    <div className="m-8 flex flex-col sm:flex-row justify-center sm:justify-around items-center max-w-md space-x-0 sm:space-x-4">
+                        <Link href="/products"><Button color="primary" className="px-10 py-4 mx-auto mb-4">Products</Button></Link>
+                        <Link href="/contact"><Button color="outlined" className="px-10 py-4 mx-auto mb-4">Contact Us</Button></Link>
                     </div>
                 </section>
                 <section className="p-4">
