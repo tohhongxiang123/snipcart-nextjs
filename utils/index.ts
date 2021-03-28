@@ -16,9 +16,44 @@ async function sleep(milliseconds: number) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-async function getAllProducts() {
+async function getAllProducts({ limit = 15, page = 1 } = {}) {
+    if (limit < 0) {
+        return {
+            data: products,
+            metadata: {
+                firstItemIndex: 1,
+                lastItemIndex: products.length,
+                firstPage: 1,
+                lastPage: 1,
+                totalCount: products.length
+            }
+        }
+    }
+
+    const totalCount = products.length
+    let firstItemIndex = (page - 1) * limit
+    let lastItemIndex = page * limit > totalCount ? totalCount : page * limit
+    const data = products.slice(firstItemIndex, lastItemIndex)
+
+    if (data.length == 0) {
+        firstItemIndex = 0
+        lastItemIndex = 0
+    }
+
     await sleep(1000)
-    return { products }
+
+    return {
+        data,
+        metadata: {
+            firstItemIndex: firstItemIndex,
+            lastItemIndex,
+            firstPage: 1,
+            currentPage: page,
+            lastPage: Math.floor(totalCount / limit) + 1,
+            totalCount,
+            limit,
+        }
+    }
 }
 
 async function getProduct(id: IProduct['id']) {
@@ -36,7 +71,7 @@ async function getProductsByCategories() {
             productCategoryDict[product.category] = [product]
         }
     }
-    
+
     return productCategoryDict
 }
 

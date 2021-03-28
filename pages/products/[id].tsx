@@ -2,17 +2,13 @@ import React from 'react'
 import { getAllProducts, getProduct } from '../../utils'
 import { IProduct } from '../../utils'
 import Layout from '../../components/Layout'
-import Button from '../../components/Button'
 import ProductButton from '../../components/ProductButton'
-import { useRouter } from 'next/router'
 
 interface ProductPageProps {
     product: IProduct
 }
 
 export default function ProductPage(props: ProductPageProps) {
-    const query = useRouter()
-    console.log(query)
     return (
         <Layout title={props.product.name}>
             <div className="p-8">
@@ -36,7 +32,7 @@ export default function ProductPage(props: ProductPageProps) {
 }
 
 export async function getStaticPaths() {
-    const { products } = await getAllProducts()
+    const { data: products } = await getAllProducts({ limit: -1 })
     const paths = products.map(product => `/products/${product.id.toString()}`)
 
     return {

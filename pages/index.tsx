@@ -49,7 +49,7 @@ export default function Index({ bestSellers = [], productCategories = {} }: Inde
 }
 
 export async function getStaticProps() {
-    const { products: bestSellers } = await getAllProducts()
+    const { data: bestSellers } = await getAllProducts()
     const productCategories = await getProductsByCategories()
     return { props: { bestSellers, productCategories } }
 }
