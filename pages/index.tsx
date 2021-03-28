@@ -38,7 +38,7 @@ export default function Index({ bestSellers = [], productCategories = {} }: Inde
                         {Object.keys(productCategories).slice(0, MAX_CATEGORIES).map(category => (
                             <div key={category} className="flex flex-col items-center">
                                 <h3 className="text-center text-2xl tracking-tight font-extrabold text-gray-900 mb-2 mx-auto">{category}</h3>
-                                {productCategories[category].slice(0, MAX_PRODUCTS).map(product => <div className="mx-auto my-4"><ProductPreview product={product} key={product.id} /></div>)}
+                                {productCategories[category].slice(0, MAX_PRODUCTS).map(product => <div className="mx-auto my-4" key={product.id}><ProductPreview product={product} key={product.id} /></div>)}
                             </div>
                         ))}
                     </div>
