@@ -1,15 +1,18 @@
 import React from 'react'
 import { getAllProducts, getProduct } from '../../utils'
-import Link from 'next/link'
 import { IProduct } from '../../utils'
 import Layout from '../../components/Layout'
 import Button from '../../components/Button'
+import ProductButton from '../../components/ProductButton'
+import { useRouter } from 'next/router'
 
 interface ProductPageProps {
     product: IProduct
 }
 
 export default function ProductPage(props: ProductPageProps) {
+    const query = useRouter()
+    console.log(query)
     return (
         <Layout title={props.product.name}>
             <div className="p-8">
@@ -21,15 +24,9 @@ export default function ProductPage(props: ProductPageProps) {
                         <h2 className="product__title text-center text-4xl font-bold mb-8">{props.product.name}</h2>
                         <p className="product__description text-lg font-semibold text-gray-600 mb-4">{props.product.description}</p>
                         <div className="product__price-button-container">
-                            <Button color="primary"
-                                className="snipcart-add-item p-4"
-                                data-item-id={props.product.id}
-                                data-item-name={props.product.name}
-                                data-item-price={props.product.price}
-                                data-item-url={`/products/${props.product.id}`}
-                                data-item-image={props.product.image}>
+                            <ProductButton product={props.product} color="primary">
                                 Add to cart (${props.product.price.toFixed(2)})
-                            </Button>
+                            </ProductButton>
                         </div>
                     </div>
                 </div>

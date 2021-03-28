@@ -19,8 +19,8 @@ export default function Layout({ title, children }: LayoutProps) {
                 <div id="snipcart" data-config-modal-style="side" data-api-key="M2JkMTNmYTUtYTljMC00OTI0LTk2ZGEtMGNiMTcwNmM3ZmY0NjM3NTEyOTc3NjgwNTcxNjg0" hidden></div>
                 <title>{title ? title : "Lorem Ipsum"}</title>
             </Head>
-            <Navbar className="sticky top-0" />
-            <main className="flex-grow">
+            <Navbar className="sticky top-0 z-10" />
+            <main className="flex-grow z-0">
                 {children}
             </main>
             <Footer />
