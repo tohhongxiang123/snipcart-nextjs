@@ -3,6 +3,7 @@ import { getAllProducts, getProduct } from '../../utils'
 import { IProduct } from '../../utils'
 import Layout from '../../components/Layout'
 import ProductButton from '../../components/ProductButton'
+import { GetStaticProps } from 'next'
 
 interface ProductPageProps {
     product: IProduct
@@ -40,8 +41,8 @@ export async function getStaticPaths() {
     }
 }
 
-export async function getStaticProps({ params }) {
-    const product = await getProduct(params.id)
+export const getStaticProps: GetStaticProps = async ({ params }: any) => {
+    const product = await getProduct(params.id as string)
 
     return {
         props: {

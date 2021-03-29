@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import './global.css'
 import 'tailwindcss/tailwind.css'
+import { AppProps } from 'next/app'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
     return <div>
         <Head>
             <link rel="preconnect" href="https://app.snipcart.com" />
