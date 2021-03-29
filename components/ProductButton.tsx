@@ -15,6 +15,8 @@ export default function ProductButton(props: ProductButtonProps) {
             data-item-url={`/products/${props.product.id}`}
             data-item-image={props.product.image}
             className={`${props.className} snipcart-add-item`}
-        />
+        >
+            {props.children}
+        </Button>
     )
 }

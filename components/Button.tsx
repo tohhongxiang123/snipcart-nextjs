@@ -12,7 +12,7 @@ const colors = {
     none: "text-base hover:bg-gray-100"
 }
 
-export default function Button({ children, color, className, ...props }: ButtonProps) {
+export default function Button({ children, color, className, ...props }) {
     return (
         <button {...props} className={`${baseClasses} ${colors[color]} ${className}`} >
             {children}

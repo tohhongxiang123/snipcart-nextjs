@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Layout from '../../components/Layout'
 import ProductPreview from '../../components/ProductPreview'
 import TextInput from '../../components/TextInput'
 import { getAllProducts, IProduct } from '../../utils'
 import { useRouter } from 'next/router'
+import { GetStaticProps } from 'next'
 
 interface IndexProps {
-    products: IProduct[],
-    lastPage: number,
-    firstItemIndex: number,
-    lastItemIndex: number,
-    totalCount: number
+    products: IProduct[]
 }
 
-export default function Index({ products = [], lastPage = 0, firstItemIndex = 0, lastItemIndex = 0, totalCount = 0 }: IndexProps) {
+export default function Index({ products = [] }: IndexProps) {
     const router = useRouter()
-    useEffect(() => {
-        if (!router.query?.page) {
-            router.push({
-                query: {
-                    page: 1
-                }
-            })
-        }
-    })
 
     const [text, setText] = useState('')
 
-    const currentPage = parseInt(router.query.page as string)
+    const currentPage = parseInt(router.query.page as string ?? "1")
     const handlePagination = (direction: number) => {
         router.push({
             query: {
                 page: currentPage + direction
             }
         })
+    }
+
+    const limit = 15
+    const totalCount = products.length
+    let firstItemIndex = (currentPage - 1) * limit
+    let lastItemIndex = currentPage * limit > totalCount ? totalCount : currentPage * limit
+    const filteredProducts = products.slice(firstItemIndex, lastItemIndex)
+    const lastPage = Math.floor(totalCount / limit) + 1
+
+    if (filteredProducts.length == 0) {
+        firstItemIndex = 0
+        lastItemIndex = 0
     }
 
     // show the first n pages, the last n pages, and [a, b] such that a < currentPage < b and b - a = n
@@ -54,7 +54,7 @@ export default function Index({ products = [], lastPage = 0, firstItemIndex = 0,
             acc.push(currentElement)
         }
         return acc
-    }, [] as number[]).map(numbers => numbers != null ? numbers + 1 : null)
+    }, [] as (number|null)[]).map(numbers => numbers != null ? numbers + 1 : null)
 
     return (
         <Layout title="All Products">
@@ -64,9 +64,9 @@ export default function Index({ products = [], lastPage = 0, firstItemIndex = 0,
                 </div>
                 <div>
                     <h2 className="text-center text-4xl tracking-tight font-extrabold text-gray-900 mb-2 mx-auto">All Products</h2>
-                    {products.length > 0 ? (
+                    {filteredProducts.length > 0 ? (
                         <div className="grid grid-flow-rowgap-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 items-center justify-start">
-                            {products.map(product => <div className="mx-auto my-4" key={product.id}><ProductPreview product={product} key={product.id} /></div>)}
+                            {filteredProducts.map(product => <div className="mx-auto my-4" key={product.id}><ProductPreview product={product} key={product.id} /></div>)}
                         </div>
                     ) : (
                         <p className="text-xl text-bold text-gray-500 text-center"><i>No items found...</i></p>
@@ -99,7 +99,7 @@ export default function Index({ products = [], lastPage = 0, firstItemIndex = 0,
                             ))}
                             {currentPage >= lastPage || <button onClick={() => handlePagination(1)} className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                 <span className="sr-only">Next</span>
-                                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0  20 20" fill="currentColor" aria-hidden="true">
+                                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                 </svg>
                             </button>}
@@ -112,7 +112,7 @@ export default function Index({ products = [], lastPage = 0, firstItemIndex = 0,
     )
 }
 
-export async function getServerSideProps(ctx) {
-    const { data, metadata } = await getAllProducts({ page: ctx.query.page })
-    return { props: { products: data, ...metadata } }
+export async function getStaticProps(ctx: GetStaticProps<{ products: IProduct[] }>) {
+    const { data } = await getAllProducts()
+    return { props: { products: data } }
 }

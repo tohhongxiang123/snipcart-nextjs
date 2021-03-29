@@ -16,7 +16,7 @@ async function sleep(milliseconds: number) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-async function getAllProducts({ limit = 15, page = 1 } = {}) {
+async function getAllProducts({ limit = -1, page = 1 } = {}) {
     if (limit < 0) {
         return {
             data: products,
@@ -45,7 +45,7 @@ async function getAllProducts({ limit = 15, page = 1 } = {}) {
     return {
         data,
         metadata: {
-            firstItemIndex: firstItemIndex,
+            firstItemIndex,
             lastItemIndex,
             firstPage: 1,
             currentPage: page,
@@ -63,7 +63,7 @@ async function getProduct(id: IProduct['id']) {
 
 async function getProductsByCategories() {
     await sleep(1000)
-    const productCategoryDict = {}
+    const productCategoryDict = {} as { [key: string]: IProduct[] }
     for (const product of products) {
         if (product.category in productCategoryDict) {
             productCategoryDict[product.category].push(product)
