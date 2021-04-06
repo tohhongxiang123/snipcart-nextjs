@@ -5,6 +5,7 @@ import TextInput from '../../components/TextInput'
 import { getAllProducts, IProduct } from '../../utils'
 import { useRouter } from 'next/router'
 import { GetStaticProps } from 'next'
+import Button from '../../components/Button'
 
 interface IndexProps {
     products: IProduct[]
@@ -13,22 +14,51 @@ interface IndexProps {
 export default function Index({ products = [] }: IndexProps) {
     const router = useRouter()
 
-    const [text, setText] = useState('')
+    const [searchText, setSearchText] = useState('')
 
     const currentPage = parseInt(router.query.page as string ?? "1")
     const handlePagination = (direction: number) => {
         router.push({
             query: {
+                ...router.query, 
                 page: currentPage + direction
+            }
+        })
+    }
+    
+    const currentSearchQuery = router.query.name as string ?? ""
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (searchText === '') {
+            router.push({
+                query: {
+                    page: 1
+                }
+            })
+        }
+
+        router.push({
+            query: {
+                page: 1,
+                name: searchText
+            }
+        })
+    }
+    const handleClearSearch = () => {
+        setSearchText('')
+        router.push({
+            query: {
+                page: 1
             }
         })
     }
 
     const limit = 15
-    const totalCount = products.length
+    const shownProducts = products.filter(product => product.name.toLowerCase().includes(currentSearchQuery.toLowerCase()))
+    const totalCount = shownProducts.length
     let firstItemIndex = (currentPage - 1) * limit
     let lastItemIndex = currentPage * limit > totalCount ? totalCount : currentPage * limit
-    const filteredProducts = products.slice(firstItemIndex, lastItemIndex)
+    const filteredProducts = shownProducts.slice(firstItemIndex, lastItemIndex)
     const lastPage = Math.floor(totalCount / limit) + 1
 
     if (filteredProducts.length == 0) {
@@ -46,7 +76,6 @@ export default function Index({ products = [] }: IndexProps) {
         if (number < numberOfFrontPagesShown || number > lastPage - numberOfBackPagesShown - 1 || Math.abs(currentPage - number) < numberOfMiddlePagesShown / 2) {
             return number
         }
-
         return null
     }).reduce((acc, currentElement) => {
         const previousElement = acc[acc.length - 1]
@@ -54,13 +83,19 @@ export default function Index({ products = [] }: IndexProps) {
             acc.push(currentElement)
         }
         return acc
-    }, [] as (number|null)[]).map(numbers => numbers != null ? numbers + 1 : null)
+    }, [] as (number | null)[]).map(numbers => numbers != null ? numbers + 1 : null)
 
     return (
         <Layout title="All Products">
             <section className="p-4">
                 <div className="p-4 flex flex-col justify-center items-center">
-                    <TextInput label="Search" onChange={e => setText(e.target.value)} value={text} />
+                    <form className="flex flex-row items-end" onSubmit={handleSearch}>
+                        <div>
+                            <TextInput label="Search" onChange={e => setSearchText(e.target.value)} value={searchText} />
+                        </div>
+                        <Button color="primary" type="submit">Search</Button>
+                        <Button color="outlined" type="button" onClick={handleClearSearch}>Clear</Button>
+                    </form>
                 </div>
                 <div>
                     <h2 className="text-center text-4xl tracking-tight font-extrabold text-gray-900 mb-2 mx-auto">All Products</h2>
@@ -91,7 +126,7 @@ export default function Index({ products = [] }: IndexProps) {
                             ) : (
                                 <button
                                     key={index}
-                                    onClick={() => router.push({ query: { page: number } })}
+                                    onClick={() => router.push({ query: { ...router.query, page: number } })}
                                     className={`relative inline-flex items-center px-4 py-2 border border-gray-300 ${currentPage === number ? "bg-gray-200" : "bg-white"} text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none`}
                                 >
                                     {number}
